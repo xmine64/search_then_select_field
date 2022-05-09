@@ -1,5 +1,3 @@
-// a text field to search items and then select one of them
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -19,24 +17,46 @@ class _HighlightPreviousIntent extends Intent {
 class SearchThenSelectField<T> extends StatefulWidget {
   final bool autofocus;
   final FocusNode? focusNode;
+
+  /// controller for underlying text field
   final TextEditingController? controller;
+
+  /// text field's decoration
   final InputDecoration? decoration;
   final bool enabled;
   final List<TextInputFormatter>? inputFormatters;
   final TextInputAction? textInputAction;
   final TextInputType? textInputType;
   final Duration debounceDuration;
+
+  /// initial value of the field
   final T? initialValue;
 
+  /// height of suggestions item
   final double itemsHeight;
 
+  /// item selection callback
   final void Function(T? value)? onSelected;
+
+  /// field submit callback
   final void Function(T? value)? onSubmit;
+
+  /// search callback
   final Future<List<T>> Function(String query) search;
+
+  /// item builder callback
   final Widget Function(BuildContext context, T value) itemBuilder;
+
+  /// get item title, used for showing in text field when focus lost
   final String Function(T value) itemStringBuilder;
+
+  /// loading view builder
   final Widget Function(BuildContext context) loadingBuilder;
+
+  /// empty view builder
   final Widget Function(BuildContext context) emptyBuilder;
+
+  /// error view builder
   final Widget Function(BuildContext context) errorBuilder;
 
   const SearchThenSelectField({
@@ -57,9 +77,9 @@ class SearchThenSelectField<T> extends StatefulWidget {
     required this.search,
     required this.itemBuilder,
     required this.itemStringBuilder,
-	required this.loadingBuilder,
-	required this.emptyBuilder,
-	required this.errorBuilder,
+    required this.loadingBuilder,
+    required this.emptyBuilder,
+    required this.errorBuilder,
   }) : super(
           key: key,
         );
@@ -124,6 +144,7 @@ class SearchThenSelectFieldState<T> extends State<SearchThenSelectField<T>> {
       }
     });
 
+    // set text field direction based on input language
     _controller.addListener(() {
       setState(() {
         _direction = intl.Bidi.detectRtlDirectionality(_controller.text)
